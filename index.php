@@ -35,7 +35,7 @@ $app->post('/usuarios', function () use ($app) {
      $_REQUEST['correo'],
       $_REQUEST['dni'],
        null,
-        $_REQUEST['dni'],
+        $_REQUEST['password'],
          0,
           "usuario",
            "activo");
