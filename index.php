@@ -44,11 +44,37 @@ echo json_encode(array('mensaje' => "Usuario registrado satisfactoriamente"));
 
 //Servicio ModificarUsuario
 $app->post('/modificarUsuario', function () use ($app) { 
-actualizarViviendaDelUsuario($_REQUEST['id'],$_REQUEST['idvivienda'])
+actualizarViviendaDelUsuario($_REQUEST['id'],$_REQUEST['idvivienda']);
 echo json_encode(array('mensaje' => "Vivienda asignado correctamente"));      
 });
 
+//Servicio registrar vivienda (UNIR CON MODIFICAR USUARIO)
+$app->post('/nuevavivienda', function () use ($app) { 
+registrarvivienda($_REQUEST['direccion'],$_REQUEST['latitud'],$_REQUEST['longitud']);
+echo json_encode(array('mensaje' => "Vivienda registrado correctamente"));      
+});
 
+//Servicio ModificarUsuario
+$app->post('/eliminarUsuario', function () use ($app) { 
+eliminarUsuario($_REQUEST['id']);
+echo json_encode(array('mensaje' => "Usuario eliminado correctamente"));      
+});
+//Servicio Registrar Solicitud
+$app->post('/registrarsolicitud', function () use ($app) { 
+registrarsolicitud($_REQUEST['usuario'],$_REQUEST['apellidos'],$_REQUEST['dni'],"Pendiente");
+echo json_encode(array('mensaje' => "Solicitud registrado correctamente"));      
+});
+//Servicio Registrar DetalleSolicitud
+$app->post('/registrardetallesolicitud', function () use ($app) { 
+registrardetallesolicitud($_REQUEST['idsolicitud'],$_REQUEST['tipo']);
+echo json_encode(array('mensaje' => "Detalle solicitud registrado correctamente"));      
+});
+//Servicio Actualizar solicitud - Fotos
+$app->post('/registrarfoto', function () use ($app) { 
+actualizardetallesolicitud($_REQUEST['iddetalle'],$_REQUEST['foto']);
+echo json_encode(array('mensaje' => "Foto registrado correctamente"));      
+});
+$id, $foto
 // Servicio 4
 $app->get('/avisos', function(){  
     $lista = listarAvisos();    

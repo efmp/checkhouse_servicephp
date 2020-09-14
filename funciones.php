@@ -155,6 +155,7 @@ function actualizarViviendaDelUsuario($id, $idvivienda){
 	}	
 }
 
+
 function eliminarUsuario($id){
 	try { 
 		$db = Conexion::getConexion();  
@@ -170,8 +171,66 @@ function eliminarUsuario($id){
 	}	
 }
 
+function registrarvivienda($direccion, $latitud, $longitud){
+	try { 
+		$db = Conexion::getConexion();			
+		$stmt = $db->prepare("insert into vivienda (direccion, latitud, longitud) values (?,?,?)");
+		$datos = array($direccion, $latitud, $longitud);
+		$db->beginTransaction();
+		$stmt->execute($datos);
+		$db->commit();
+	} catch (PDOException $e) {
+		$db->rollback();
+		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
+		die($mensaje);
+	}		
+}
 
 
+function registrarsolicitud($usuario, $nombres, $apellidos, $dni, $estado){
+	try { 
+		$db = Conexion::getConexion();			
+		$stmt = $db->prepare("insert into solicitud (usuario, nombres, apellidos, dni, estado) values (?,?,?,?,?)");
+		$datos = array($usuario, $nombres, $apellidos, $dni, $estado);
+		$db->beginTransaction();
+		$stmt->execute($datos);
+		$db->commit();
+	} catch (PDOException $e) {
+		$db->rollback();
+		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
+		die($mensaje);
+	}		
+}
+
+function registrardetallesolicitud($idsolicitud, $tipo){
+	try { 
+		$db = Conexion::getConexion();			
+		$stmt = $db->prepare("insert into detallesolicitud (idsolicitud, tipo) values (?,?)");
+		$datos = array($idsolicitud, $tipo);
+		$db->beginTransaction();
+		$stmt->execute($datos);
+		$db->commit();
+	} catch (PDOException $e) {
+		$db->rollback();
+		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
+		die($mensaje);
+	}		
+}
+
+function actualizardetallesolicitud($id, $foto){
+	try { 
+		$db = Conexion::getConexion();		
+		$stmt = $db->prepare("update producto set foto=? where id=?");
+		$datos = array($foto, $id);
+		$db->beginTransaction();						
+		$stmt->execute($datos);			
+		$db->commit();
+	} catch (PDOException $e) {
+		$db->rollback();
+		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
+		die($mensaje);
+	}	
+}
 
 
 function listarAvisos(){	
