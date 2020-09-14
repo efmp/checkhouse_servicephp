@@ -22,6 +22,12 @@ $app->get('/usuario/:dni', function($dni){
     echo json_encode($lista);    
 });
 
+// Servicio 2
+$app->get('/usuario/correo/:correo', function($correo){   
+    $lista = buscarUsuarioPorCorreo($correo);    
+    echo json_encode($lista);    
+});
+
 //Servicio Validar nuevo usuario
 $app->get('/existecorreo/:correo', function($correo){   
     $mensaje = existecorreo($correo);    

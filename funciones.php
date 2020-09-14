@@ -33,7 +33,7 @@ function listarUsuarios(){
 function buscarUsuarioPorDni($dni){	
 	try { 	
 		$db = Conexion::getConexion();
-		$stmt = $db->prepare("select * from usuario where dni=?");
+		$stmt = $db->prepare("select * from usuario where dni like ?");
 		$stmt->bindValue(1, "%$dni%", PDO::PARAM_STR);
 
 		$stmt->execute();
@@ -69,13 +69,14 @@ function buscarUsuarioPorDni($dni){
 function buscarUsuarioPorCorreo($correo){	
 	try { 	
 		$db = Conexion::getConexion();
-		$stmt = $db->prepare("select * from usuario where correo like ?");
+		$stmt = $db->prepare("select * from usuario where correo=:correo");
 		$stmt->bindValue(1, "%$correo%", PDO::PARAM_STR);
+		$stmt->execute(array(':correo'=>$correo));
 
-		$stmt->execute();
-		$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);		
+		$users = $stmt->fetchAll(PDO::FETCH_ASSOC);	
+
 		$arreglo = array();
-		foreach($filas as $fila) {			
+		foreach($users as $fila) {			
 			$elemento = array();
 			$elemento['id'] = $fila['id'];
 			$elemento['nombres'] = $fila['nombres'];
@@ -89,7 +90,7 @@ function buscarUsuarioPorCorreo($correo){
 			$elemento['estado'] = $fila['estado'];
 			$arreglo[] = $elemento;
 		}
-		return $arreglo;
+		return $users[0];
 		
 	} catch (PDOException $e) {
 		$db->rollback();
@@ -97,6 +98,7 @@ function buscarUsuarioPorCorreo($correo){
 		die($mensaje);
 	}		
 }
+
 function existecorreo($correo){	
 	try { 	
 		$db = Conexion::getConexion();
