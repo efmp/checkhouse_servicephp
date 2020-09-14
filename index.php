@@ -74,7 +74,6 @@ $app->post('/registrarfoto', function () use ($app) {
 actualizardetallesolicitud($_REQUEST['iddetalle'],$_REQUEST['foto']);
 echo json_encode(array('mensaje' => "Foto registrado correctamente"));      
 });
-$id, $foto
 // Servicio 4
 $app->get('/avisos', function(){  
     $lista = listarAvisos();    
