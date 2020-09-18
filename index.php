@@ -10,12 +10,17 @@ require_once 'Conexion.php';
 $app = new \Slim\Slim();
 $app->response->header('Content-Type', 'application/json');
 
-// Servicio 1
+// GET USUARIOS
 $app->get('/usuarios', function(){  
-    $lista = listarUsuarios();    
+    $lista = listarUsuarios(); 
     echo json_encode($lista);    
 });
 
+// GET SOLICITUDES
+$app->get('/solicitudes/:usuario', function($dni){  
+    $lista = listarSolicitud($dni);    
+    echo json_encode($lista);    
+});
 // Servicio 2
 $app->get('/usuario/:dni', function($dni){   
     $lista = buscarUsuarioPorDni($dni);    

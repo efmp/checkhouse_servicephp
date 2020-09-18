@@ -1,27 +1,28 @@
 <?php
     
-function listarUsuarios(){	
+
+
+
+function listarSolicitud($usuario){	
 	try { 	
 		$db = Conexion::getConexion();
-		$stmt = $db->prepare("select * from usuario");
-		$stmt->execute();
-		$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);			
+		$stmt = $db->prepare("select * from solicitud where usuario=:usuario");
+		$stmt->bindValue(1, "%$usuario%", PDO::PARAM_STR);
+		$stmt->execute(array(':usuario'=>$usuario));
+		$users = $stmt->fetchAll(PDO::FETCH_ASSOC);	
 		$arreglo = array();
-		foreach($filas as $fila) {			
-		    $elemento = array();
+		foreach($users as $fila) {			
 			$elemento['id'] = $fila['id'];
+			$elemento['usuario'] = $fila['usuario'];
 			$elemento['nombres'] = $fila['nombres'];
 			$elemento['apellidos'] = $fila['apellidos'];
-			$elemento['correo'] = $fila['correo'];
 			$elemento['dni'] = $fila['dni'];
-			$elemento['idvivienda'] = $fila['idvivienda'];
-			$elemento['password'] = $fila['password'];
-			$elemento['intentos'] = $fila['intentos'];
-			$elemento['tipo'] = $fila['tipo'];
+			$elemento['vivienda'] = $fila['vivienda'];
+			$elemento['banco'] = $fila['banco'];
 			$elemento['estado'] = $fila['estado'];
 			$arreglo[] = $elemento;
 		}
-		return $arreglo;
+		return $users;
 		
 	} catch (PDOException $e) {
 		$db->rollback();
@@ -29,6 +30,32 @@ function listarUsuarios(){
 		die($mensaje);
 	}		
 }
+
+function listarDetalleSolicitud($idsolicitud){	
+	try { 	
+		$db = Conexion::getConexion();
+		$stmt = $db->prepare("select * from detallesolicitud where idsolicitud=:idsolicitud");
+		$stmt->bindValue(1, "%$idsolicitud%", PDO::PARAM_STR);
+		$stmt->execute(array(':idsolicitud'=>$usuario));
+		$users = $stmt->fetchAll(PDO::FETCH_ASSOC);	
+		$arreglo = array();
+		foreach($users as $fila) {			
+			$elemento['id'] = $fila['id'];
+			$elemento['idsolicitud'] = $fila['idsolicitud'];
+			$elemento['foto'] = $fila['foto'];
+			$elemento['descripcion'] = $fila['descripcion'];
+			$elemento['tipo'] = $fila['tipo'];
+			$arreglo[] = $elemento;
+		}
+		return $users;
+		
+	} catch (PDOException $e) {
+		$db->rollback();
+		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
+		die($mensaje);
+	}		
+}
+
 
 function buscarUsuarioPorDni($dni){	
 	try { 	
@@ -88,6 +115,7 @@ function buscarUsuarioPorCorreo($correo){
 			$elemento['intentos'] = $fila['intentos'];
 			$elemento['tipo'] = $fila['tipo'];
 			$elemento['estado'] = $fila['estado'];
+			$elemento['empresa'] = $fila['empresa'];
 			$arreglo[] = $elemento;
 		}
 		return $users[0];
