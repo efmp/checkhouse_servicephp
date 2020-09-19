@@ -85,34 +85,5 @@ $app->post('/registrarfoto', function () use ($app) {
 actualizardetallesolicitud($_REQUEST['iddetalle'],$_REQUEST['foto']);
 echo json_encode(array('mensaje' => "Foto registrado correctamente"));      
 });
-// Servicio 4
-$app->get('/avisos', function(){  
-    $lista = listarAvisos();    
-    echo json_encode($lista);    
-});
-
-
-// Servicio 5
-$app->get('/avisos/:fecha', function($fecha){  
-    $lista = buscarAvisos($fecha);    
-    echo json_encode($lista);    
-});
-
-
-// Servicio 6
-$app->post('/avisos', function() use ($app){     
-   /*
-   $request = $app->request();
-   $body = $request->getBody();
-   $data = json_decode($body);       
-   insertarAviso($data->titulo, $data->fecha_inicio, $data->fecha_fin);
-   */
-   $titulo = $app->request()->post('titulo');
-   $fecha_inicio = $app->request()->post('fecha_inicio');
-   $fecha_fin = $app->request()->post('fecha_fin');
-   insertarAviso($titulo, $fecha_inicio, $fecha_fin);
-   echo json_encode(array('mensaje' => "Aviso registrado!"));    
-});
-
 
 $app->run();

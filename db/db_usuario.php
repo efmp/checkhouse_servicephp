@@ -1,53 +1,27 @@
-<?php
-    
-
-
-
-function listarSolicitud($usuario){	
+<?php    
+function listarUsuarios(){	
 	try { 	
 		$db = Conexion::getConexion();
-		$stmt = $db->prepare("select * from solicitud where usuario=:usuario");
-		$stmt->bindValue(1, "%$usuario%", PDO::PARAM_STR);
-		$stmt->execute(array(':usuario'=>$usuario));
-		$users = $stmt->fetchAll(PDO::FETCH_ASSOC);	
+		$stmt = $db->prepare("select * from usuario");
+		$stmt->execute();
+		$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 		$arreglo = array();
-		foreach($users as $fila) {			
+		foreach($filas as $fila) {			
+		    $elemento = array();
 			$elemento['id'] = $fila['id'];
-			$elemento['usuario'] = $fila['usuario'];
 			$elemento['nombres'] = $fila['nombres'];
 			$elemento['apellidos'] = $fila['apellidos'];
+			$elemento['correo'] = $fila['correo'];
 			$elemento['dni'] = $fila['dni'];
-			$elemento['vivienda'] = $fila['vivienda'];
-			$elemento['banco'] = $fila['banco'];
-			$elemento['estado'] = $fila['estado'];
-			$arreglo[] = $elemento;
-		}
-		return $users;
-		
-	} catch (PDOException $e) {
-		$db->rollback();
-		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
-		die($mensaje);
-	}		
-}
-
-function listarDetalleSolicitud($idsolicitud){	
-	try { 	
-		$db = Conexion::getConexion();
-		$stmt = $db->prepare("select * from detallesolicitud where idsolicitud=:idsolicitud");
-		$stmt->bindValue(1, "%$idsolicitud%", PDO::PARAM_STR);
-		$stmt->execute(array(':idsolicitud'=>$usuario));
-		$users = $stmt->fetchAll(PDO::FETCH_ASSOC);	
-		$arreglo = array();
-		foreach($users as $fila) {			
-			$elemento['id'] = $fila['id'];
-			$elemento['idsolicitud'] = $fila['idsolicitud'];
-			$elemento['foto'] = $fila['foto'];
-			$elemento['descripcion'] = $fila['descripcion'];
+			$elemento['idvivienda'] = $fila['idvivienda'];
+			$elemento['password'] = $fila['password'];
+			$elemento['intentos'] = $fila['intentos'];
 			$elemento['tipo'] = $fila['tipo'];
+			$elemento['estado'] = $fila['estado'];
+			$elemento['empresa'] = $fila['empresa'];
 			$arreglo[] = $elemento;
 		}
-		return $users;
+		return $arreglo;
 		
 	} catch (PDOException $e) {
 		$db->rollback();
@@ -55,7 +29,6 @@ function listarDetalleSolicitud($idsolicitud){
 		die($mensaje);
 	}		
 }
-
 
 function buscarUsuarioPorDni($dni){	
 	try { 	
@@ -88,10 +61,6 @@ function buscarUsuarioPorDni($dni){
 		die($mensaje);
 	}		
 }
-
-
-
-
 
 function buscarUsuarioPorCorreo($correo){	
 	try { 	
@@ -151,8 +120,6 @@ function existecorreo($correo){
 		die($mensaje);
 	}		
 }
-
-
 function insertarUsuario($nombres, $apellidos, $correo, $dni, $idvivienda, $password, $intentos, $tipo, $estado){
 	try { 
 		$db = Conexion::getConexion();			
@@ -170,22 +137,6 @@ function insertarUsuario($nombres, $apellidos, $correo, $dni, $idvivienda, $pass
 	}		
 }
 
-function actualizarViviendaDelUsuario($id, $idvivienda){
-	try { 
-		$db = Conexion::getConexion();		
-		$stmt = $db->prepare("update producto set idvivienda=? where id=?");
-		$datos = array($idvivienda, $id);
-		$db->beginTransaction();						
-		$stmt->execute($datos);			
-		$db->commit();
-	} catch (PDOException $e) {
-		$db->rollback();
-		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
-		die($mensaje);
-	}	
-}
-
-
 function eliminarUsuario($id){
 	try { 
 		$db = Conexion::getConexion();  
@@ -201,57 +152,11 @@ function eliminarUsuario($id){
 	}	
 }
 
-function registrarvivienda($direccion, $latitud, $longitud){
-	try { 
-		$db = Conexion::getConexion();			
-		$stmt = $db->prepare("insert into vivienda (direccion, latitud, longitud) values (?,?,?)");
-		$datos = array($direccion, $latitud, $longitud);
-		$db->beginTransaction();
-		$stmt->execute($datos);
-		$db->commit();
-	} catch (PDOException $e) {
-		$db->rollback();
-		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
-		die($mensaje);
-	}		
-}
-
-
-function registrarsolicitud($usuario, $nombres, $apellidos, $dni, $estado){
-	try { 
-		$db = Conexion::getConexion();			
-		$stmt = $db->prepare("insert into solicitud (usuario, nombres, apellidos, dni, estado) values (?,?,?,?,?)");
-		$datos = array($usuario, $nombres, $apellidos, $dni, $estado);
-		$db->beginTransaction();
-		$stmt->execute($datos);
-		$db->commit();
-	} catch (PDOException $e) {
-		$db->rollback();
-		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
-		die($mensaje);
-	}		
-}
-
-function registrardetallesolicitud($idsolicitud, $tipo){
-	try { 
-		$db = Conexion::getConexion();			
-		$stmt = $db->prepare("insert into detallesolicitud (idsolicitud, tipo) values (?,?)");
-		$datos = array($idsolicitud, $tipo);
-		$db->beginTransaction();
-		$stmt->execute($datos);
-		$db->commit();
-	} catch (PDOException $e) {
-		$db->rollback();
-		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
-		die($mensaje);
-	}		
-}
-
-function actualizardetallesolicitud($id, $foto){
+function actualizarViviendaDelUsuario($id, $idvivienda){
 	try { 
 		$db = Conexion::getConexion();		
-		$stmt = $db->prepare("update producto set foto=? where id=?");
-		$datos = array($foto, $id);
+		$stmt = $db->prepare("update vivienda set idvivienda=? where id=?");
+		$datos = array($idvivienda, $id);
 		$db->beginTransaction();						
 		$stmt->execute($datos);			
 		$db->commit();
@@ -262,5 +167,19 @@ function actualizardetallesolicitud($id, $foto){
 	}	
 }
 
+function cambiarContrasena($correo, $password){
+	try { 
+		$db = Conexion::getConexion();		
+		$stmt = $db->prepare("update usuario set password=? where correo=?");
+		$datos = array($password, $correo);
+		$db->beginTransaction();						
+		$stmt->execute($datos);			
+		$db->commit();
+	} catch (PDOException $e) {
+		$db->rollback();
+		$mensaje  = '<b>Consulta inválida:</b> ' . $e->getMessage() . "<br/>";
+		die($mensaje);
+	}	
+}
 
 ?>
