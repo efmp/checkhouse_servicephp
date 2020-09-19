@@ -17,6 +17,12 @@ $app->get('/solicitudes/:usuario', function($dni){
     echo json_encode($lista);    
 });
 
+// GET ULTIMA SOLICITUD
+$app->get('/solicitud/last', function(){  
+    $lista = obtenerultimasolicitud();    
+    echo json_encode($lista);    
+});
+
 // GET SOLICITUDES
 $app->get('/dsolicitud/:solicitud', function($solicitud){  
     $lista = listarDetalleSolicitud($solicitud);    
@@ -25,8 +31,8 @@ $app->get('/dsolicitud/:solicitud', function($solicitud){
 
 
 $app->post('/solicitud', function () use ($app) { 
-registrarsolicitud($_REQUEST['usuario'],$_REQUEST['apellidos'],$_REQUEST['dni'],"Pendiente");
-echo json_encode(array('mensaje' => "Solicitud registrado correctamente"));      
+registrarsolicitud($_REQUEST['usuario'],$_REQUEST['nombres'],$_REQUEST['apellidos'],$_REQUEST['dni'],$_REQUEST['banco'],"Pendiente");
+echo json_encode(array('mensaje' => "Solicitud registrado correctamente",'data' => obtenerultimasolicitud()));        
 });
 //Servicio Registrar DetalleSolicitud
 $app->post('/detallesolicitud', function () use ($app) { 
