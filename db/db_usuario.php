@@ -33,13 +33,13 @@ function listarUsuarios(){
 function buscarUsuarioPorDni($dni){	
 	try { 	
 		$db = Conexion::getConexion();
-		$stmt = $db->prepare("select * from usuario where dni like ?");
+		$stmt = $db->prepare("select * from usuario where dni=:dni");
 		$stmt->bindValue(1, "%$dni%", PDO::PARAM_STR);
+		$stmt->execute(array(':dni'=>$dni));
 
-		$stmt->execute();
-		$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);		
+		$users = $stmt->fetchAll(PDO::FETCH_ASSOC);	
 		$arreglo = array();
-		foreach($filas as $fila) {			
+		foreach($users as $fila) {			
 			$elemento = array();
 			$elemento['id'] = $fila['id'];
 			$elemento['nombres'] = $fila['nombres'];
@@ -53,7 +53,7 @@ function buscarUsuarioPorDni($dni){
 			$elemento['estado'] = $fila['estado'];
 			$arreglo[] = $elemento;
 		}
-		return $arreglo;
+		return $users;
 		
 	} catch (PDOException $e) {
 		$db->rollback();
